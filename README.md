@@ -13,7 +13,7 @@ Ce service repose sur **Spring Boot**, **Spring Security** et **Spring Cloud Gat
 
 ## Dépendances
 
-- **JHipster Registry**
+- **JHipster Registry(registersgr.jar)**
 - Base de données relationnelle
 
 ## Rôles et responsabilités
@@ -77,6 +77,8 @@ Aucun accès direct aux microservices métiers n’est autorisé depuis le clien
 ## Lancement en mode développement
 
 Assurez-vous que la **JHipster Registry** est accessible :
+- Lancer JHipster Registry depuis le cmd avec la commande: java -jar registersgr
+- Tester avec l'url:
 http://localhost:8761
 
 
