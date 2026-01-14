@@ -1,0 +1,23 @@
+{
+  "annotations": {
+    "changelogDate": "20251219151437"
+  },
+  "clientRootFolder": "sgrcore",
+  "databaseType": "sql",
+  "dto": "no",
+  "fields": [
+    {
+      "fieldName": "nomFiliere",
+      "fieldType": "String"
+    }
+  ],
+  "jpaMetamodelFiltering": false,
+  "microserviceName": "sgrcore",
+  "microservicePath": "C:\\PROJECTS\\IBAM\\sgrcore",
+  "name": "Filiere",
+  "pagination": "pagination",
+  "readOnly": false,
+  "relationships": [],
+  "searchEngine": "no",
+  "service": "serviceClass"
+}

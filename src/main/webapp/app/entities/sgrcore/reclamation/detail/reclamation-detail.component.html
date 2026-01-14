@@ -1,0 +1,159 @@
+<div class="container my-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-10 col-xl-9">
+
+      @if (reclamation(); as reclamationRef) {
+        <div class="card shadow border-0">
+
+          <!-- ===== HEADER ===== -->
+          <div class="card-header text-center reclamation-header">
+            <h3 class="fw-bold mb-0">
+              📄 Détails de la Réclamation #{{ reclamationRef.id }}
+            </h3>
+          </div>
+
+          <!-- ===== BODY ===== -->
+          <div class="card-body px-4 px-lg-5">
+
+            <jhi-alert-error />
+            <jhi-alert />
+
+            <!-- ================= RÉCLAMANT ================= -->
+            <div class="section-card">
+              <h5 class="section-title">
+                👤 Informations du Réclamant
+              </h5>
+
+              <div class="row">
+                <div class="col-md-6">
+                  <p><strong>Nom :</strong> {{ reclamationRef.nomReclamant || 'Non renseigné' }}</p>
+                  <p><strong>Prénom :</strong> {{ reclamationRef.prenomReclamant || 'Non renseigné' }}</p>
+                </div>
+                <div class="col-md-6">
+                  <p><strong>Niveau d'étude :</strong> {{ reclamationRef.niveauEtude || 'Non renseigné' }}</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- ================= RÉCLAMATION ================= -->
+            <div class="section-card">
+              <h5 class="section-title">
+                📝 Détails de la Réclamation
+              </h5>
+
+              <div class="row">
+                <div class="col-md-6">
+                  <p><strong>Objet :</strong> {{ reclamationRef.objetReclamation || 'Non renseigné' }}</p>
+                  <p><strong>Motif :</strong> {{ reclamationRef.motifReclamation || 'Non renseigné' }}</p>
+                </div>
+
+                <div class="col-md-6">
+                  <p>
+                    <strong>État :</strong>
+                    <span class="badge bg-info ms-1">
+                      {{ reclamationRef.etatReclamation || 'Inconnu' }}
+                    </span>
+                  </p>
+
+                  <p>
+                    <strong>Justificatif :</strong>
+                    <ng-container *ngIf="reclamationRef.justificatif; else noJustif">
+                      <button
+                        class="btn btn-outline-primary btn-sm ms-2"
+                        (click)="downloadJustificatif(reclamationRef)"
+                      >
+                        <fa-icon icon="download"></fa-icon>
+                        Télécharger
+                      </button>
+                    </ng-container>
+                    <ng-template #noJustif>
+                      <span class="text-muted fst-italic ms-2">Aucun</span>
+                    </ng-template>
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- ================= PÉDAGOGIE ================= -->
+            <div class="section-card">
+              <h5 class="section-title">
+                🎓 Informations Pédagogiques
+              </h5>
+
+              <div class="row">
+                <div class="col-md-6">
+                  <p>
+                    <strong>Filière :</strong>
+                    <ng-container *ngIf="reclamationRef.filiere; else noFiliere">
+                        {{ reclamationRef.filiere.nomFiliere }}
+                    </ng-container>
+                    <ng-template #noFiliere>Non renseignée</ng-template>
+                  </p>
+
+                  <p>
+                    <strong>Matière :</strong>
+                    <ng-container *ngIf="reclamationRef.matiere; else noMatiere">
+                        {{ reclamationRef.matiere.nomMatiere }}
+                    </ng-container>
+                    <ng-template #noMatiere>Non renseignée</ng-template>
+                  </p>
+                </div>
+
+                <div class="col-md-6">
+                  <p>
+                    <strong>Professeur :</strong>
+                    {{ reclamationRef.professeur?.lastName }}
+                    {{ reclamationRef.professeur?.firstName || 'Non renseigné' }}
+                  </p>
+                  <p>
+                    <strong>Contact :</strong>
+                    {{ reclamationRef.contactProfesseur || 'Non renseigné' }}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- ================= NOTES ================= -->
+            <div class="section-card">
+              <h5 class="section-title">
+                📊 Notes
+              </h5>
+
+              <div class="row text-center">
+                <div class="col-md-6">
+                  <p class="text-muted mb-1">Ancienne note</p>
+                  <h4>{{ reclamationRef.noteActuelle ?? '—' }}</h4>
+                </div>
+
+                <div class="col-md-6">
+                  <p class="text-muted mb-1">Note corrigée</p>
+                  <h4 class="text-success fw-bold">
+                    {{ reclamationRef.noteCorrige ?? '—' }}
+                  </h4>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ===== FOOTER ===== -->
+          <div class="card-footer d-flex justify-content-between px-4">
+            <button class="btn btn-outline-secondary" (click)="previousState()">
+              <fa-icon icon="arrow-left"></fa-icon>
+              Retour
+            </button>
+
+            <button
+              class="btn btn-primary"
+              [routerLink]="['/reclamation', reclamationRef.id, 'edit']"
+            >
+              <fa-icon icon="pencil-alt"></fa-icon>
+              Modifier
+            </button>
+          </div>
+
+        </div>
+      }
+
+    </div>
+  </div>
+</div>

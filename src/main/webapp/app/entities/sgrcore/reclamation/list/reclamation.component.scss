@@ -1,0 +1,24 @@
+.table-entities td,
+.table-entities th {
+  vertical-align: middle;
+}
+
+.text-ellipsis {
+  max-width: 220px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.text-ellipsis-sm {
+  max-width: 150px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.btn-icon {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}

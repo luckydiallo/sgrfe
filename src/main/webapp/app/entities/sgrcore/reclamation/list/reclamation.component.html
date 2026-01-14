@@ -1,0 +1,234 @@
+<div>
+  <h2 id="page-heading" data-cy="ReclamationHeading">
+    <span *ngIf="!isDirecteur">Reclamations</span>
+    <span *ngIf="isDirecteur" class="d-none d-md-inline">Liste des Reclamations envoyées par la Scolarité</span>
+
+    <div class="d-flex justify-content-end">
+
+      <button
+        class="btn btn-outline-secondary me-2"
+        (click)="load()"
+        *ngIf="isScolarite || isDirecteur || isAdmin">
+        <fa-icon icon="list"></fa-icon>
+        <span>Reset filter</span>
+      </button>
+
+       <button
+        class="btn btn-outline-warning me-2"
+        (click)="loadAllReclamations()"
+        [disabled]="isLoading"
+        *ngIf="isDirecteur">
+        <fa-icon icon="filter"></fa-icon>
+        <span>Voir Tous</span>
+      </button>
+
+      <button
+        class="btn btn-outline-warning me-2"
+        (click)="loadNonAffectedReclamations()"
+        [disabled]="isLoading"
+        *ngIf="isScolarite || isDirecteur || isAdmin">
+        <span>Non affectées</span>
+      </button>
+
+      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading">
+        <fa-icon icon="sync" [animation]="isLoading ? 'spin' : undefined"></fa-icon>
+        <span>Actualiser la liste</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-reclamation"
+        [routerLink]="['/reclamation/new']"
+        *ngIf="isEtudiant || isDirecteur || isAdmin"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span>Créer une nouvelle Reclamation</span>
+      </button>
+    </div>
+  </h2>&nbsp;&nbsp;
+  <jhi-alert-error />
+
+  <jhi-alert />
+
+<div class="table-responsive table-entities" id="entities">
+  <table class="table table-striped table-hover align-middle" aria-describedby="page-heading">
+    <thead class="table-light">
+      <tr jhiSort [(sortState)]="sortState" (sortChange)="navigateToWithComponentValues($event)">
+        <th>N°</th>
+        <th>Nom</th>
+        <th>Prénom</th>
+        <th>Niveau</th>
+        <th>Objet</th>
+        <th>Motif</th>
+        <th>État</th>
+        <!-- <th>Filière</th>
+        <th>Matière</th> -->
+        <th class="text-center">Anc. note</th>
+        <th class="text-center">Note corr.</th>
+        <!-- <th>Professeur</th> -->
+        <th class="text-center">Justificatif</th>
+        <!-- <th class="text-end">Actions</th> -->
+      </tr>
+    </thead>
+
+    <tbody>
+      @for (reclamation of reclamations(); track trackId(reclamation); let i = $index) {
+        <tr>
+          <td class="fw-semibold text-nowrap">
+            <a [routerLink]="['/reclamation', reclamation.id, 'view']">{{ i + 1 }}</a>
+          </td>
+
+          <td class="text-nowrap">{{ reclamation.nomReclamant }}</td>
+          <td class="text-nowrap">{{ reclamation.prenomReclamant }}</td>
+          <td class="text-nowrap">{{ reclamation.niveauEtude }}</td>
+
+          <td class="text-truncate" style="max-width: 250px;" [title]="reclamation.objetReclamation">
+            <a (click)="showObjetReclamationDetails(reclamation)"
+               class="text-decoration-none text-primary d-inline-block text-nowrap">
+              {{ reclamation.objetReclamation }}
+            </a>
+          </td>
+          <td
+            class="text-truncate"
+            style="max-width: 180px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
+            [title]="reclamation.motifReclamation"
+          >
+            <a
+              (click)="showMotifDetails(reclamation)"
+              class="text-decoration-none text-primary d-inline-block"
+              style="max-width: 180px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
+            >
+              {{ reclamation.motifReclamation }}
+            </a>
+          </td>
+          <td>
+            <span class="badge"
+                  [ngClass]="{
+                    'bg-warning text-dark': reclamation.etatReclamation === 'EN_COURS',
+                    'bg-success': reclamation.etatReclamation === 'ACCEPTEE',
+                    'bg-danger': reclamation.etatReclamation === 'REJETEE'
+                  }">
+              {{ reclamation.etatReclamation }}
+            </span>
+          </td>
+          <!-- <td class="text-truncate" style="max-width: 150px;">
+            <a *ngIf="reclamation.filiere"
+               (click)="showFiliereDetails(reclamation)"
+               class="text-decoration-none text-primary text-nowrap">
+              {{ reclamation.filiere.nomFiliere }}
+            </a>
+          </td> -->
+
+          <!-- <td class="text-truncate" style="max-width: 150px;">
+            <a *ngIf="reclamation.matiere"
+               (click)="showMatiereDetails(reclamation)"
+               class="text-decoration-none text-primary text-nowrap">
+              {{ reclamation.matiere.nomMatiere }}
+            </a>
+          </td> -->
+
+          <td class="text-center fw-semibold text-nowrap">
+            {{ reclamation.noteActuelle }}
+          </td>
+
+          <td class="text-center fw-semibold text-nowrap">
+            {{ reclamation.noteCorrige }}
+          </td>
+
+          <!-- <td class="text-nowrap">
+            {{ reclamation.professeur?.lastName }} {{ reclamation.professeur?.firstName }}
+          </td> -->
+
+          <td class="text-center">
+            <button *ngIf="reclamation.justificatif"
+                    class="btn btn-outline-primary btn-sm text-nowrap"
+                    (click)="downloadJustificatif(reclamation)">
+              <fa-icon icon="download"></fa-icon>
+              <span class="ms-1">Télécharger</span>
+            </button>
+
+            <span *ngIf="!reclamation.justificatif"
+                  class="text-muted fst-italic text-nowrap">
+              Aucun
+            </span>
+          </td>
+
+          <td class="text-end">
+            <div class="btn-group btn-group-sm">
+
+              <button
+                *ngIf="(isProfesseur || isAdmin || isDirecteur)
+                        && reclamation.etatReclamation === 'EN_COURS'"
+                class="btn btn-success text-nowrap"
+                (click)="accepterReclamation(reclamation)">
+                <fa-icon icon="check"></fa-icon>
+                <span class="ms-1">Accepter</span>
+              </button>
+
+              <button
+                *ngIf="(isProfesseur || isScolarite || isAdmin || isDirecteur)
+                        && reclamation.etatReclamation === 'EN_COURS'"
+                class="btn btn-danger text-nowrap"
+                (click)="rejeterReclamation(reclamation)">
+                <fa-icon icon="ban"></fa-icon>
+                <span class="ms-1">Rejeter</span>
+              </button>
+
+              <a *ngIf="isScolarite || isDirecteur || isAdmin"
+                 [routerLink]="['/reclamation', reclamation.id, 'affect']"
+                 class="btn btn-primary text-nowrap">
+                Affect.
+              </a>
+
+              <a [routerLink]="['/reclamation', reclamation.id, 'view']"
+                 class="btn btn-info text-nowrap">
+                <fa-icon icon="eye"></fa-icon>
+                <span class="ms-1">Voir</span>
+              </a>
+
+              <a *ngIf="!isScolarite && !isProfesseur"
+                 [routerLink]="['/reclamation', reclamation.id, 'edit']"
+                 class="btn btn-secondary text-nowrap">
+                Éditer
+              </a>
+
+              <a *ngIf="isScolarite || isProfesseur"
+                 [routerLink]="['/reclamation', reclamation.id, 'edit']"
+                 class="btn btn-secondary text-nowrap">
+                Éditer note
+              </a>
+
+              <button *ngIf="isDirecteur || isAdmin"
+                      class="btn btn-outline-danger text-nowrap"
+                      (click)="delete(reclamation)">
+                Supprimer
+              </button>
+
+            </div>
+          </td>
+        </tr>
+      }
+    </tbody>
+    </table>
+  </div>
+ @if (reclamations().length > 0) {
+    <div>
+      <div class="d-flex justify-content-center">
+        <jhi-item-count [params]="{ page, totalItems, itemsPerPage }" />
+      </div>
+
+      <div class="d-flex justify-content-center">
+        <ngb-pagination
+          [collectionSize]="totalItems"
+          [page]="page"
+          [pageSize]="itemsPerPage"
+          [maxSize]="5"
+          [rotate]="true"
+          [boundaryLinks]="true"
+          (pageChange)="navigateToPage($event)"
+        ></ngb-pagination>
+      </div>
+    </div>
+  }
+</div>

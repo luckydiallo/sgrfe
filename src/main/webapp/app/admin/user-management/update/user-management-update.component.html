@@ -1,0 +1,213 @@
+<div class="d-flex justify-content-center">
+  <div class="col-md-8">
+    <form name="editForm" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+
+      <h2 id="user-management-heading">
+        Créer ou modifier un utilisateur
+      </h2>
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <!-- ID -->
+      <div class="mb-3" *ngIf="editForm.get('id')?.value !== null">
+        <label class="form-label" for="field_id">ID</label>
+        <input
+          type="text"
+          id="field_id"
+          class="form-control"
+          formControlName="id"
+          readonly
+        />
+      </div>
+
+      <!-- LOGIN -->
+      <div class="mb-3">
+        <label class="form-label" for="field_login">Nom d'utilisateur</label>
+        <input
+          type="text"
+          id="field_login"
+          class="form-control"
+          formControlName="login"
+        />
+
+        @let loginRef = editForm.get('login')!;
+        @if (loginRef.invalid && (loginRef.dirty || loginRef.touched)) {
+          <div class="text-danger">
+            @if (loginRef.errors?.required) {
+              <small>Ce champ est obligatoire.</small>
+            }
+            @if (loginRef.errors?.maxlength) {
+              <small>Maximum 50 caractères.</small>
+            }
+            @if (loginRef.errors?.pattern) {
+              <small>Format non valide.</small>
+            }
+          </div>
+        }
+      </div>
+
+      <!-- PRENOM -->
+      <div class="mb-3">
+        <label class="form-label" for="field_firstName">Prénom</label>
+        <input
+          type="text"
+          id="field_firstName"
+          class="form-control"
+          formControlName="firstName"
+        />
+      </div>
+
+      <!-- NOM -->
+      <div class="mb-3">
+        <label class="form-label" for="field_lastName">Nom</label>
+        <input
+          type="text"
+          id="field_lastName"
+          class="form-control"
+          formControlName="lastName"
+        />
+      </div>
+
+      <!-- EMAIL -->
+      <div class="mb-3">
+        <label class="form-label" for="field_email">Email</label>
+        <input
+          type="email"
+          id="field_email"
+          class="form-control"
+          formControlName="email"
+        />
+
+        @let emailRef = editForm.get('email')!;
+        @if (emailRef.invalid && (emailRef.dirty || emailRef.touched)) {
+          <div class="text-danger">
+            @if (emailRef.errors?.required) {
+              <small>Email obligatoire.</small>
+            }
+            @if (emailRef.errors?.email) {
+              <small>Email invalide.</small>
+            }
+          </div>
+        }
+      </div>
+
+      <!-- PROFIL -->
+      <div class="mb-3">
+        <label class="form-label" for="field_profile">Profil</label>
+        <select
+          id="field_profile"
+          class="form-select"
+          formControlName="profile"
+        >
+          <option value="">-- Sélectionner --</option>
+          <option value="ETUDIANT">Étudiant</option>
+          <option value="PROFESSEUR">Professeur</option>
+          <option value="SCOLARITE">Scolarité</option>
+          <option value="DIRECTEUR">Directeur</option>
+        </select>
+      </div>
+
+      <!-- ===== ETUDIANT ===== -->
+      @if (editForm.get('profile')?.value === 'ETUDIANT') {
+
+        <div class="mb-3">
+          <label class="form-label">Niveau d’étude</label>
+          <select class="form-select" formControlName="niveauEtude">
+            <option value="">-- Sélectionner --</option>
+            @for (niveau of niveauxEtude; track niveau) {
+              <option [value]="niveau">{{ niveau }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Filière</label>
+          <select class="form-select" formControlName="filiereId">
+            <option value="">-- Sélectionner --</option>
+            @for (f of filieres(); track f.id) {
+              <option [value]="f.id">{{ f.nomFiliere }}</option>
+            }
+          </select>
+        </div>
+      }
+
+      <!-- ===== PROFESSEUR ===== -->
+      @if (editForm.get('profile')?.value === 'PROFESSEUR') {
+
+        <div class="mb-3">
+          <label class="form-label">Matières enseignées</label>
+          <select multiple class="form-select" formControlName="matiereIds">
+            @for (m of matieres(); track m.id) {
+              <option [value]="m.id">{{ m.nomMatiere }}</option>
+            }
+          </select>
+        </div>
+      }
+
+      <!-- MOT DE PASSE -->
+          <div class="mb-3">
+            <label class="form-label">Mot de passe</label>
+            <input type="password" class="form-control" formControlName="password" />
+            <jhi-password-strength-bar
+              [passwordToCheck]="editForm.get('password')?.value || ''"
+            />
+          </div>
+
+          <!-- CONFIRMATION -->
+          <div class="mb-3">
+            <label class="form-label">Confirmation du mot de passe</label>
+            <input type="password" class="form-control" formControlName="confirmPassword" />
+          </div>
+
+          @if (doNotMatch()) {
+            <div class="alert alert-danger">
+              Le nouveau mot de passe et sa confirmation ne sont pas égaux !
+            </div>
+          }
+
+
+      <!-- ACTIVATION -->
+      <div class="form-check mb-3">
+        <input
+          type="checkbox"
+          id="activated"
+          class="form-check-input"
+          formControlName="activated"
+        />
+        <label class="form-check-label" for="activated">
+          Compte activé
+        </label>
+      </div>
+
+      <!-- AUTORITES -->
+      <!-- <div class="mb-3">
+        <label class="form-label">Droits (Rôles)</label>
+        <select
+          multiple
+          class="form-select"
+          formControlName="authorities"
+        >
+          @for (authority of authorities(); track authority) {
+            <option [value]="authority">{{ authority }}</option>
+          }
+        </select>
+      </div> -->
+
+      <!-- BOUTONS -->
+      <div class="d-flex justify-content-between">
+        <button type="button" class="btn btn-secondary" (click)="previousState()">
+          Annuler
+        </button>
+
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="editForm.invalid || isSaving()"
+        >
+          Sauvegarder
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>

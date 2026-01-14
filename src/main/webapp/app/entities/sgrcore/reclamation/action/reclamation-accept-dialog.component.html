@@ -1,0 +1,22 @@
+@if (reclamation) {
+  <form name="acceptForm" (ngSubmit)="confirmAccept(reclamation!)">
+    <div class="modal-header">
+      <h4 class="modal-title" data-cy="reclamationAcceptDialogHeading">Confirmation de validité de la Reclamation</h4>
+    </div>
+
+    <div class="modal-body">
+      <jhi-alert-error />
+      <p id="jhi-accepte-reclamation-heading">Êtes-vous certain de vouloir accepter la Reclamation {{ reclamation.id }} ?</p>
+    </div>
+
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="cancel()">
+        <fa-icon icon="ban"></fa-icon>&nbsp;<span>Annuler</span>
+      </button>
+
+      <button id="jhi-confirm-accept-reclamation" data-cy="entityConfirmAcceptButton" type="submit" class="btn btn-danger">
+        <fa-icon icon="times"></fa-icon>&nbsp;<span>Accepter</span>
+      </button>
+    </div>
+  </form>
+}

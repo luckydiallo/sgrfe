@@ -1,0 +1,57 @@
+<form name="choixForm">
+  <div class="modal-header d-flex justify-content-between align-items-center">
+    <h4 class="modal-title">
+      <span *ngIf="isAdmin">Choix de l'utilisateur</span>
+      <span *ngIf="isScolarite">Choix du Directeur</span>
+      <span *ngIf="isDirecteur">Choix du Professeur</span>
+    </h4>
+    <button type="button" class="btn-close" aria-label="Fermer" (click)="cancel()"></button>
+  </div>
+  <div class="modal-body">
+
+    <!-- MESSAGE VIDE -->
+    <div
+      class="alert alert-warning"
+      *ngIf="users?.length === 0"
+    >
+      <span *ngIf="isAdmin">Utilisateur non trouvé</span>
+      <span *ngIf="isScolarite">Directeur non trouvé</span>
+      <span *ngIf="isDirecteur">Aucun professeur trouvé</span>
+    </div>
+
+    <!-- TABLE -->
+    <div *ngIf="users && users.length > 0">
+      <div class="table-responsive">
+        <table class="table table-striped" aria-describedby="modalTitle">
+          <thead>
+            <tr>
+              <th>Nom</th>
+              <th>Prénom</th>
+              <th>Profil</th>
+              <th></th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let user of users; trackBy: trackUserById">
+              <td>{{ user.lastName }}</td>
+              <td>{{ user.firstName }}</td>
+              <td>{{ user.profile }}</td>
+              <td class="text-end">
+                <button
+                  type="button"
+                  class="btn btn-primary btn-sm"
+                  (click)="choisirUser(user)"
+                >
+                  <fa-icon icon="plus"></fa-icon>
+                  Choisir
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</form>

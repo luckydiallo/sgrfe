@@ -1,0 +1,124 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+
+    <!-- suppression de formGroup car editForm n’existe pas -->
+    <form role="form" novalidate>
+
+      <!-- TITRE SELON LE RÔLE -->
+       <h2 *ngIf="isAdmin">
+        Affectation de la réclamation a un utilisateur
+      </h2>
+      <h2 *ngIf="isScolarite">
+        Affectation de la réclamation au Directeur
+      </h2>
+      <h2 *ngIf="isDirecteur">
+        Affectation de la réclamation au Professeur
+      </h2>
+
+      <!-- ALERTES -->
+      <jhi-alert-error></jhi-alert-error>
+
+      <ngb-toast
+        *ngIf="showError"
+        class="bg-danger text-white"
+        [autohide]="true"
+        [delay]="3000"
+        (hidden)="showError = false"
+      >
+        <p *ngIf="isAdmin">
+            Veuillez choisir un utilisateur avant de continuer.
+          </p>
+        <p *ngIf="isScolarite">
+          Veuillez choisir le directeur avant de continuer.
+        </p>
+        <p *ngIf="isDirecteur">
+          Veuillez choisir le professeur avant de continuer.
+        </p>
+      </ngb-toast>
+
+      <br />
+
+      <!-- DETAILS -->
+      <div class="card mb-4">
+        <div class="card-header bg-primary text-white fs-5 fw-bold">
+          Détails de la Réclamation
+        </div>
+
+        <div class="card-body">
+          <p>
+            <strong>Date d'enregistrement :</strong>
+            {{ reclamation.dateEnregistrement }}
+          </p>
+          <p>
+            <strong>Nom :</strong> {{ reclamation.nomReclamant }}
+            <strong>Prénom :</strong> {{ reclamation.prenomReclamant }}
+          </p>
+          <p><strong>Filière :</strong> {{ reclamation.filiere?.nomFiliere }}</p>
+          <p><strong>Matière :</strong> {{ reclamation.matiere?.nomMatiere }}</p>
+          <p><strong>Objet :</strong> {{ reclamation.objetReclamation }}</p>
+          <p><strong>Motif :</strong> {{ reclamation.motifReclamation }}</p>
+        </div>
+      </div>
+
+      <!-- ACTIONS -->
+       <div *ngIf="isAdmin" class="mb-3">
+        <label><strong>Choisir Utilisateur</strong></label>
+        <button type="button" class="btn btn-primary btn-sm" (click)="chargerUtilisateurs()">
+          <fa-icon icon="plus"></fa-icon> Choisir
+        </button>
+      </div>
+      <div *ngIf="isScolarite" class="mb-3">
+        <label><strong>Choisir Directeur</strong></label>
+        <button type="button" class="btn btn-primary btn-sm" (click)="choisirDirecteur()">
+          <fa-icon icon="plus"></fa-icon> Choisir
+        </button>
+      </div>
+      <div *ngIf="isDirecteur" class="mb-3">
+        <label><strong>Choisir Professeur</strong></label>
+        <button type="button" class="btn btn-primary btn-sm" (click)="choisirProfesseur()">
+          <fa-icon icon="plus"></fa-icon> Choisir
+        </button>
+      </div>
+
+      <!-- UTILISATEUR CHOISI -->
+      <table
+        class="table table-striped"
+        *ngIf="userChoisi?.id"
+      >
+        <thead>
+          <tr>
+            <th>Nom</th>
+            <th>Prénom</th>
+            <th>Profil</th>
+            <th></th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr>
+            <td>{{ userChoisi?.lastName }}</td>
+            <td>{{ userChoisi?.firstName }}</td>
+            <td>{{ userChoisi?.profile }}</td>
+            <td class="text-end">
+              <button type="button" class="btn btn-danger btn-sm" (click)="deleteUser()">
+                <fa-icon icon="times"></fa-icon>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- BOUTONS -->
+      <div class="mt-4">
+        <button type="button" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon> Annuler
+        </button>
+
+        <button type="button" class="btn btn-primary" [disabled]="isSaving" (click)="save()">
+          <fa-icon icon="save"></fa-icon> Enregistrer
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>

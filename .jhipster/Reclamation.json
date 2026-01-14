@@ -1,0 +1,80 @@
+{
+  "annotations": {
+    "changelogDate": "20251223225918"
+  },
+  "clientRootFolder": "sgrcore",
+  "databaseType": "sql",
+  "dto": "no",
+  "fields": [
+    {
+      "fieldName": "nomReclamant",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "maxlength"],
+      "fieldValidateRulesMaxlength": "150"
+    },
+    {
+      "fieldName": "prenomReclamant",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "maxlength"],
+      "fieldValidateRulesMaxlength": "150"
+    },
+    {
+      "fieldName": "niveauEtude",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "objetReclamation",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "motifReclamation",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "justificatif",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "etatReclamation",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    }
+  ],
+  "jpaMetamodelFiltering": false,
+  "microserviceName": "sgrcore",
+  "microservicePath": "C:\\PROJECTS\\IBAM\\sgrcore",
+  "name": "Reclamation",
+  "pagination": "pagination",
+  "readOnly": false,
+  "relationships": [
+    {
+      "otherEntityField": "id",
+      "otherEntityName": "filiere",
+      "relationshipName": "filiere",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": ["required"]
+    },
+    {
+      "otherEntityField": "id",
+      "otherEntityName": "matiere",
+      "relationshipName": "matiere",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": ["required"]
+    },
+    {
+      "otherEntityField": "login",
+      "otherEntityName": "user",
+      "otherEntityRelationshipName": "reclamation",
+      "relationshipName": "user",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": ["required"]
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceClass"
+}

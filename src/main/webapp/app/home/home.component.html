@@ -1,0 +1,112 @@
+<div class="row" style="margin-top:2rem;">
+
+  <!-- ===================== -->
+  <!-- AVANT CONNEXION       -->
+  <!-- ===================== -->
+  @if (account() === null) {
+
+    <div class="col-md-3 d-flex justify-content-center align-items-start">
+      <span
+        class="hipster img-fluid rounded"
+        style="
+          display:block;
+          width:200px;
+          height:250px;
+          background: linear-gradient(135deg, #f6e8d3, #fff);
+          border-radius:12px;
+          display:flex;
+          align-items:center;
+          justify-content:center;
+          font-weight:700;
+          color:#6f3f00;
+          font-size:1.2rem;
+        "
+      >
+        IBAM
+      </span>
+    </div>
+
+    <div class="col-md-9">
+      <h1 class="display-4 mb-3" style="font-weight:700; color:#6f3f00;">
+        Bienvenue sur le portail IBAM
+      </h1>
+
+      <p class="lead text-muted mb-4">
+        Centralisez, suivez et traitez vos réclamations universitaires de manière simple,
+        sécurisée et transparente.
+      </p>
+
+      <div class="alert alert-warning" style="border-radius:12px;">
+        <span>Connectez-vous pour accéder à votre tableau de bord.</span>
+      </div>
+
+      <div class="alert alert-info" style="border-radius:12px;">
+        <span>Vous n'avez pas encore de compte ? Veuillez prendre attache avec l'Administration de l'IBAM.</span>
+      </div>
+
+      <div class="d-flex flex-wrap gap-3 mt-4">
+        <div class="btn btn-primary btn-lg" style="border-radius:8px;">
+          <a
+            class="alert-link"
+            (click)="login()"
+            style="text-decoration:none; color:#fff; display:block;"
+          >
+            Se connecter
+          </a>
+        </div>
+
+        <!-- <div class="btn btn-outline-secondary btn-lg" style="border-radius:8px;">
+          <a
+            class="alert-link"
+            routerLink="/account/register"
+            style="text-decoration:none; color:#6f3f00; display:block;"
+          >
+            Créer un compte
+          </a>
+        </div> -->
+      </div>
+
+      <section
+        class="mt-5"
+        style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px,1fr)); gap:1rem;"
+      >
+        <div class="home-card">
+          <h5>Suivie</h5>
+          <p>Verifiez l'état de votre reclamation à tout moment.</p>
+        </div>
+
+        <div class="home-card">
+          <h5>Confidentialité</h5>
+          <p>Accès sécurisé selon les rôles utilisateurs.</p>
+        </div>
+
+        <div class="home-card">
+          <h5>Réponses rapides</h5>
+          <p>Processus optimisés pour un traitement efficace.</p>
+        </div>
+      </section>
+    </div>
+  }
+
+  <!-- ===================== -->
+<!-- APRÈS CONNEXION       -->
+<!-- ===================== -->
+@if (account() !== null) {
+  <div 
+    style="
+      position: fixed;
+      top: 56px;      /* Ajustez cette valeur selon la hauteur réelle de votre menu (souvent 56px ou 60px) */
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ffffff;
+      border: 30px solid #d3d3d3; /* Bordure grise très épaisse */
+      box-sizing: border-box;
+      z-index: 0;     /* Passe derrière le menu */
+      margin: 0;
+    "
+  >
+    </div>
+}
+
+</div>

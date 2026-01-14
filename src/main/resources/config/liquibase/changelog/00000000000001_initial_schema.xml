@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+  <!-- 1. Création de la table Filiere -->
+  <changeSet id="20251219-00-create-filiere" author="belcodiallo">
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <tableExists tableName="filiere"/>
+      </not>
+    </preConditions>
+
+    <createTable tableName="filiere">
+      <column name="id" type="bigint" autoIncrement="true">
+        <constraints primaryKey="true" nullable="false"/>
+      </column>
+      <column name="nom" type="varchar(100)">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+  <!-- 2. Ajout du discriminator utilisateur -->
+  <changeSet id="20251219-01-add-user-type" author="belcodiallo">
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <columnExists tableName="jhi_user" columnName="user_type"/>
+      </not>
+    </preConditions>
+
+    <addColumn tableName="jhi_user">
+      <column name="user_type" type="varchar(31)" defaultValue="USER"/>
+    </addColumn>
+  </changeSet>
+
+  <!-- 3. Colonnes spécifiques ETUDIANT -->
+  <changeSet id="20251219-02-add-etudiant-columns" author="belcodiallo">
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <columnExists tableName="jhi_user" columnName="niveau_etude"/>
+      </not>
+    </preConditions>
+
+    <addColumn tableName="jhi_user">
+      <column name="niveau_etude" type="varchar(150)"/>
+      <column name="filiere_id" type="bigint"/>
+    </addColumn>
+  </changeSet>
+
+  <!-- 3b. FK jhi_user -> filiere -->
+  <changeSet id="20251219-02b-add-fk-user-filiere" author="belcodiallo">
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <foreignKeyConstraintExists foreignKeyName="fk_user_filiere"/>
+      </not>
+    </preConditions>
+
+    <addForeignKeyConstraint
+      baseTableName="jhi_user"
+      baseColumnNames="filiere_id"
+      referencedTableName="filiere"
+      referencedColumnNames="id"
+      constraintName="fk_user_filiere"/>
+  </changeSet>
+
+  <!-- 4. Création table Matiere -->
+  <changeSet id="20251219-03-create-matiere" author="belcodiallo">
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <tableExists tableName="matiere"/>
+      </not>
+    </preConditions>
+
+    <createTable tableName="matiere">
+      <column name="id" type="bigint" autoIncrement="true">
+        <constraints primaryKey="true" nullable="false"/>
+      </column>
+      <column name="nom" type="varchar(100)">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+  <!-- 5. Table de jointure Professeur ↔ Matiere -->
+  <changeSet id="20251219-04-create-professeur-matiere" author="belcodiallo">
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <tableExists tableName="professeur_matiere"/>
+      </not>
+    </preConditions>
+
+    <createTable tableName="professeur_matiere">
+      <column name="professeur_id" type="bigint">
+        <constraints nullable="false"/>
+      </column>
+      <column name="matiere_id" type="bigint">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+
+    <addPrimaryKey
+      tableName="professeur_matiere"
+      columnNames="professeur_id, matiere_id"
+      constraintName="pk_professeur_matiere"/>
+
+    <addForeignKeyConstraint
+      baseTableName="professeur_matiere"
+      baseColumnNames="professeur_id"
+      referencedTableName="jhi_user"
+      referencedColumnNames="id"
+      constraintName="fk_professeur_matiere_user"/>
+
+    <addForeignKeyConstraint
+      baseTableName="professeur_matiere"
+      baseColumnNames="matiere_id"
+      referencedTableName="matiere"
+      referencedColumnNames="id"
+      constraintName="fk_professeur_matiere_matiere"/>
+  </changeSet>
+
+</databaseChangeLog>
